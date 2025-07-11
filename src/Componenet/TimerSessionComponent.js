@@ -1,7 +1,7 @@
 import React from "react";
 import { LuPlay, LuTimerReset } from "react-icons/lu";
 
-export default function TimerSessionComponent() {
+export default function TimerSessionComponent({sessionTimerLength}) {
   return (
     <div
       style={{
@@ -40,7 +40,7 @@ export default function TimerSessionComponent() {
             fontSize: "5.75rem",
           }}
         >
-          {"25:00"}
+          {sessionTimerLength}
         </div>
       </div>
       <div

@@ -1,7 +1,26 @@
 import React from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
-export default function TimerComponent({ timerLength, timerLengthName }) {
+export default function TimerComponent({
+  timerLength,
+  setTimerLength,
+  timerLengthName,
+}) {
+  const updateIntervalLength = (myBool) => {
+    console.log(myBool);
+    if (myBool) {
+      const updated = timerLength + 1;
+
+      setTimerLength(updated);
+    } else {
+      const updated = timerLength - 1;
+      if (updated <= 0) {
+        return;
+      }
+      setTimerLength(updated);
+    }
+  };
+
   return (
     <div
       style={{
@@ -28,7 +47,31 @@ export default function TimerComponent({ timerLength, timerLengthName }) {
           alignItems: "center",
         }}
       >
-        <FaArrowUp /> {timerLength} <FaArrowDown />
+        <div
+          id="up"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={() => updateIntervalLength(true)}
+        >
+          <FaArrowUp />{" "}
+        </div>
+        {timerLength}{" "}
+        <div
+          id="down"
+          style={{
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onClick={() => updateIntervalLength(false)}
+        >
+          <FaArrowDown />
+        </div>
       </div>
     </div>
   );

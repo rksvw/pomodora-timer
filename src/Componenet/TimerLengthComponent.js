@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 
 import TimerComponent from "./TimerComponent";
 
-export default function TimerLengthComponent() {
-  const [breakTimerLength, setBreakTimerLength] = useState(5);
-  const [sessionTimerLength, setSessionTimerLength] = useState(25);
+export default function TimerLengthComponent({
+  breakTimerLength,
+  setBreakTimerLength,
+  sessionTimerLength,
+  setSessionTimerLength,
+}) {
   return (
     <div
       className="_"
@@ -38,12 +41,12 @@ export default function TimerLengthComponent() {
       >
         <TimerComponent
           timerLength={breakTimerLength}
-          setBreakTimerLength={setBreakTimerLength}
+          setTimerLength={setBreakTimerLength}
           timerLengthName={"Break"}
         />
         <TimerComponent
           timerLength={sessionTimerLength}
-          setSessionTimerLength={setSessionTimerLength}
+          setTimerLength={setSessionTimerLength}
           timerLengthName={"Session"}
         />
       </div>
