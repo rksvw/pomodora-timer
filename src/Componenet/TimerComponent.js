@@ -10,6 +10,9 @@ export default function TimerComponent({
     console.log(myBool);
     if (myBool) {
       const updated = timerLength + 1;
+      if (updated >= 61) {
+        return;
+      }
 
       setTimerLength(updated);
     } else {

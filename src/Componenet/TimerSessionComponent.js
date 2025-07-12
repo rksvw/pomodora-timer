@@ -1,7 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { LuPlay, LuTimerReset } from "react-icons/lu";
 
-export default function TimerSessionComponent({sessionTimerLength}) {
+export default function TimerSessionComponent({ sessionTimerLength }) {
+  const [countMinute, setCountMinute] = useState(sessionTimerLength);
+  const [countSecond, setCountSecond] = useState(60);
+  const [countBreak, setCountBreak] = useState(5);
+
+
+  // 1. Create a loop that run until the reset button click -> while
+  // 2. 25 min timer -> Interval
+  // 3. stop 25 min timer and ring bell -> Audio : Set Break
+  // 4. start break timer -> Interval
+  // 5. stop break timer and ring bell -> Audio : Set timer
+  // 6. repeat from step 2 -> again
+
   return (
     <div
       style={{
@@ -40,7 +52,7 @@ export default function TimerSessionComponent({sessionTimerLength}) {
             fontSize: "5.75rem",
           }}
         >
-          {sessionTimerLength}
+          {`${sessionTimerLength}:00`}
         </div>
       </div>
       <div
