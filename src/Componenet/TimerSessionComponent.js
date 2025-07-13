@@ -1,18 +1,86 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LuPlay, LuTimerReset } from "react-icons/lu";
 
-export default function TimerSessionComponent({ sessionTimerLength }) {
-  const [countMinute, setCountMinute] = useState(sessionTimerLength);
-  const [countSecond, setCountSecond] = useState(60);
-  const [countBreak, setCountBreak] = useState(5);
+export default function TimerSessionComponent({
+  workLength,
+  breakLength,
+  setSessionTimerLength,
+  setBreakTimerLength,
+}) {
+  const [timerLeft, setTimeLeft] = useState(workLength * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isBreak, setIsBreak] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
+  const intervalRef = useRef(null);
+  const bellSoundRef = useRef(null);
 
-  // 1. Create a loop that run until the reset button click -> while
-  // 2. 25 min timer -> Interval
-  // 3. stop 25 min timer and ring bell -> Audio : Set Break
-  // 4. start break timer -> Interval
-  // 5. stop break timer and ring bell -> Audio : Set timer
-  // 6. repeat from step 2 -> again
+  // Initialize bell only once
+  useEffect(() => {
+    bellSoundRef.current = new Audio(
+      "https://cdn.freecodecamp.org/testable-projects-fcc/audio/BeepSound.wav"
+    );
+
+    setTimeLeft(workLength * 60);
+  }, [workLength, setTimeLeft]);
+
+  // Format timer like MM:SS
+  const formatTime = (seconds) => {
+    const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const sec = String(seconds % 60).padStart(2, "0");
+
+    return `${min}:${sec}`;
+  };
+
+  // Intervals
+  const startTimer = (initialTime, isBreakPhase) => {
+    let time = initialTime;
+    intervalRef.current = setInterval(() => {
+      time -= 1;
+      setTimeLeft(time);
+      if (time <= 0) {
+        clearInterval(intervalRef.current);
+        bellSoundRef.current?.play();
+
+        if (!isBreakPhase) {
+          // Switch to break
+          setIsBreak(true);
+          startTimer(breakLength, true);
+        } else {
+          // Switch to work
+          setIsBreak(false);
+          setIsRunning(false);
+        }
+      }
+    }, 1000);
+  };
+
+  const handleStartStop = () => {
+    if (!isRunning) {
+      // Start from beginning
+      setIsRunning(true);
+      setIsPaused(false);
+      startTimer(timerLeft, isBreak);
+    } else if (isRunning && !isPaused) {
+      // Pause
+      clearInterval(intervalRef.current);
+      setIsPaused(true);
+    } else if (isRunning && isPaused) {
+      // Resume
+      setIsPaused(false);
+      startTimer(timerLeft, isBreak);
+    }
+  };
+
+  const handleReset = () => {
+    clearInterval(intervalRef.current);
+    setIsRunning(false);
+    setIsPaused(false);
+    setIsBreak(false);
+    setSessionTimerLength(25);
+    setBreakTimerLength(5);
+    setTimeLeft(25 * 60);
+  };
 
   return (
     <div
@@ -44,6 +112,7 @@ export default function TimerSessionComponent({ sessionTimerLength }) {
             fontWeight: "400",
             textAlign: "center",
           }}
+          id="timer-label"
         >
           Session
         </h2>
@@ -51,8 +120,9 @@ export default function TimerSessionComponent({ sessionTimerLength }) {
           style={{
             fontSize: "5.75rem",
           }}
+          id="time-left"
         >
-          {`${sessionTimerLength}:00`}
+          {formatTime(timerLeft)}
         </div>
       </div>
       <div
@@ -63,7 +133,16 @@ export default function TimerSessionComponent({ sessionTimerLength }) {
           padding: "1rem",
         }}
       >
-        <LuPlay /> <LuTimerReset />
+        <LuPlay
+          onClick={handleStartStop}
+          id="start_stop"
+          style={{ cursor: "pointer" }}
+        />{" "}
+        <LuTimerReset
+          style={{ cursor: "pointer" }}
+          id="reset"
+          onClick={handleReset}
+        />
       </div>
     </div>
   );

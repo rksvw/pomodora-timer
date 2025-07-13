@@ -12,10 +12,16 @@ function App() {
         <TimerLengthComponent
           breakTimerLength={breakTimerLength}
           setBreakTimerLength={setBreakTimerLength}
-          sessionTimerLength={sessionTimerLength}
           setSessionTimerLength={setSessionTimerLength}
+          sessionTimerLength={sessionTimerLength}
         />
-        <TimerSessionComponent sessionTimerLength={sessionTimerLength} />
+
+        <TimerSessionComponent
+          workLength={sessionTimerLength}
+          breakLength={breakTimerLength}
+          setSessionTimerLength={setSessionTimerLength}
+          setBreakTimerLength={setBreakTimerLength}
+        />
       </div>
     </>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 
 export default function TimerComponent({
@@ -9,19 +8,20 @@ export default function TimerComponent({
   const updateIntervalLength = (myBool) => {
     console.log(myBool);
     if (myBool) {
-      const updated = timerLength + 1;
-      if (updated >= 61) {
+      let updated = timerLength + 1;
+      if (updated > 60) {
         return;
       }
 
       setTimerLength(updated);
     } else {
-      const updated = timerLength - 1;
-      if (updated <= 0) {
+      let updated = timerLength - 1;
+      if (updated < 1) {
         return;
       }
       setTimerLength(updated);
     }
+    return;
   };
 
   return (
@@ -31,6 +31,7 @@ export default function TimerComponent({
         flexDirection: "column",
         alignItems: "center",
       }}
+      id={`${timerLengthName.toLowerCase()}-label`}
     >
       <h2
         style={{
@@ -60,9 +61,9 @@ export default function TimerComponent({
           }}
           onClick={() => updateIntervalLength(true)}
         >
-          <FaArrowUp />{" "}
+          <FaArrowUp id={`${timerLengthName.toLowerCase()}-increment`} />{" "}
         </div>
-        {timerLength}{" "}
+        <div id={`${timerLengthName.toLowerCase()}-length`}>{timerLength} </div>
         <div
           id="down"
           style={{
@@ -73,7 +74,7 @@ export default function TimerComponent({
           }}
           onClick={() => updateIntervalLength(false)}
         >
-          <FaArrowDown />
+          <FaArrowDown id={`${timerLengthName.toLowerCase()}-decrement`} />
         </div>
       </div>
     </div>
