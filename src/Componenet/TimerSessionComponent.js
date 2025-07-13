@@ -45,7 +45,7 @@ export default function TimerSessionComponent({
         if (!isBreakPhase) {
           // Switch to break
           setIsBreak(true);
-          startTimer(breakLength, true);
+          startTimer(breakLength * 60, true);
         } else {
           // Switch to work
           setIsBreak(false);
@@ -114,7 +114,7 @@ export default function TimerSessionComponent({
           }}
           id="timer-label"
         >
-          Session
+          {isBreak ? "Break" : "Session"}
         </h2>
         <div
           style={{
