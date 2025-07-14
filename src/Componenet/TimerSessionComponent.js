@@ -7,7 +7,7 @@ export default function TimerSessionComponent({
   setSessionTimerLength,
   setBreakTimerLength,
 }) {
-  const [timerLeft, setTimeLeft] = useState(workLength * 60);
+  const [timeLeft, setTimeLeft] = useState(workLength * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -35,9 +35,11 @@ export default function TimerSessionComponent({
   // Intervals
   const startTimer = (initialTime, isBreakPhase) => {
     let time = initialTime;
+
     intervalRef.current = setInterval(() => {
       time -= 1;
       setTimeLeft(time);
+
       if (time <= 0) {
         clearInterval(intervalRef.current);
         bellSoundRef.current?.play();
@@ -50,6 +52,7 @@ export default function TimerSessionComponent({
           // Switch to work
           setIsBreak(false);
           setIsRunning(false);
+          startTimer(workLength * 60, false);
         }
       }
     }, 1000);
@@ -60,7 +63,7 @@ export default function TimerSessionComponent({
       // Start from beginning
       setIsRunning(true);
       setIsPaused(false);
-      startTimer(timerLeft, isBreak);
+      startTimer(timeLeft, isBreak);
     } else if (isRunning && !isPaused) {
       // Pause
       clearInterval(intervalRef.current);
@@ -68,7 +71,7 @@ export default function TimerSessionComponent({
     } else if (isRunning && isPaused) {
       // Resume
       setIsPaused(false);
-      startTimer(timerLeft, isBreak);
+      startTimer(timeLeft, isBreak);
     }
   };
 
@@ -111,6 +114,7 @@ export default function TimerSessionComponent({
             fontSize: "2.3rem",
             fontWeight: "400",
             textAlign: "center",
+            color: timeLeft <= "60" ? "red" : "white",
           }}
           id="timer-label"
         >
@@ -119,10 +123,11 @@ export default function TimerSessionComponent({
         <div
           style={{
             fontSize: "5.75rem",
+            color: timeLeft <= "60" ? "red" : "white",
           }}
           id="time-left"
         >
-          {formatTime(timerLeft)}
+          {formatTime(timeLeft)}
         </div>
       </div>
       <div
